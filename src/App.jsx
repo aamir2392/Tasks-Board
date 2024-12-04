@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
-import './App.css'
-import Navbar from './components/Navbar'
-import SidePanel from './components/SidePanel'
-import ListsContainer from './components/ListsContainer'
-import Footer from './components/Footer'
-import CreateNewList from './components/CreateNewList'
-import CreateNewTask from './components/CreateNewTask'
+import { useEffect, useRef, useState } from "react";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import SidePanel from "./components/SidePanel";
+import ListsContainer from "./components/ListsContainer";
+import Footer from "./components/Footer";
+import CreateNewList from "./components/CreateNewList";
+import CreateNewTask from "./components/CreateNewTask";
 
-import mockData from './assets/mockData.json'
+import mockData from "./assets/mockData.json";
 function App() {
   const { mock_lists, mock_tasks } = mockData;
   const [lists, setLists] = useState(mock_lists);
@@ -17,8 +17,9 @@ function App() {
 
   const [showCreateNewList_Modal, setShowCreateNewList_Modal] = useState(false);
   const [showCreateNewTask_Modal, setShowCreateNewTask_Modal] = useState(false);
-  
-  const [idOfListTheTaskIsBeingAddedTo, setIdOfListTheTaskIsBeingAddedTo] = useState(0);
+
+  const [idOfListTheTaskIsBeingAddedTo, setIdOfListTheTaskIsBeingAddedTo] =
+    useState(0);
   const [theTaskBeingEdited, setTheTaskBeingEdited] = useState(null);
   const [theListBeingEdited, setTheListBeingEdited] = useState(null);
 
@@ -31,45 +32,51 @@ function App() {
       const targetPosition = targetRef.offsetLeft - container.scrollLeft - 25;
 
       container.scrollTo({
-          left: container.scrollLeft + targetPosition - container.clientWidth / 2 + targetRef.clientWidth / 2,
-          behavior: "smooth",
+        left:
+          container.scrollLeft +
+          targetPosition -
+          container.clientWidth / 2 +
+          targetRef.clientWidth / 2,
+        behavior: "smooth",
       });
-  }
+    }
   };
 
   // To show modal for creating new list
-  const showNewListModal = (show) => { // show = true | false
+  const showNewListModal = (show) => {
+    // show = true | false
     setShowCreateNewList_Modal(show);
-  }
+  };
 
   // To show modal for creating new task
-  const showNewTaskModal = (show, listId) => { // show = true | false
+  const showNewTaskModal = (show, listId) => {
+    // show = true | false
     setShowCreateNewTask_Modal(show);
 
     setIdOfListTheTaskIsBeingAddedTo(listId);
-  }
+  };
 
   // Add new list
   const getListsFromStorage = () => {
-    const storedList = localStorage.getItem('todos-lists');
+    const storedList = localStorage.getItem("todos-lists");
     return storedList ? JSON.parse(storedList) : [];
   };
 
   const saveNewListToStorage = (listTitle) => {
-    try {  
-      const newListId = lists.length + 1; 
+    try {
+      const newListId = lists.length + 1;
       const newList = {
         id: newListId,
         name: listTitle,
       };
-  
+
       const storedList = getListsFromStorage();
       const updatedLists = [...storedList, newList];
-  
-      localStorage.setItem('todos-lists', JSON.stringify(updatedLists));
+
+      localStorage.setItem("todos-lists", JSON.stringify(updatedLists));
       setLists([...lists, newList]);
     } catch (error) {
-      console.error('Error saving the new list:', error);
+      console.error("Error saving the new list:", error);
     }
   };
 
@@ -84,7 +91,7 @@ function App() {
           const updatedLists = storedLists.map((list) =>
             list.id === theListBeingEdited.id ? theListBeingEdited : list
           );
-          localStorage.setItem('todos-lists', JSON.stringify(updatedLists));
+          localStorage.setItem("todos-lists", JSON.stringify(updatedLists));
         }
       }
     } else {
@@ -94,26 +101,26 @@ function App() {
 
   // Add new Task
   const getTasksFromLocalStorage = () => {
-    const storedTasks = localStorage.getItem('todos-tasks');
+    const storedTasks = localStorage.getItem("todos-tasks");
     return storedTasks ? JSON.parse(storedTasks) : [];
-  }
+  };
   const saveNewTaskToStorage = (listDesc) => {
-    try {  
-      const newTaskId = tasks[tasks.length - 1].id + 1; 
+    try {
+      const newTaskId = tasks[tasks.length - 1].id + 1;
       const newTask = {
         id: newTaskId,
         title: listDesc,
         listId: idOfListTheTaskIsBeingAddedTo,
         completed: false,
       };
-  
+
       const storedTasks = getTasksFromLocalStorage();
       const updatedTasks = [...storedTasks, newTask];
-  
-      localStorage.setItem('todos-tasks', JSON.stringify(updatedTasks));
+
+      localStorage.setItem("todos-tasks", JSON.stringify(updatedTasks));
       setTasks([...tasks, newTask]);
     } catch (error) {
-      console.error('Error saving the new list:', error);
+      console.error("Error saving the new list:", error);
     }
   };
   const handleNewTask = (taskDesc) => {
@@ -127,28 +134,30 @@ function App() {
           const updatedTasks = storedTasks.map((task) =>
             task.id === theTaskBeingEdited.id ? theTaskBeingEdited : task
           );
-          localStorage.setItem('todos-tasks', JSON.stringify(updatedTasks));
+          localStorage.setItem("todos-tasks", JSON.stringify(updatedTasks));
         }
       }
     } else {
       saveNewTaskToStorage(taskDesc);
     }
-  }
+  };
 
   // Edit a Task
   const handleEditTask = (taskToEdit) => {
     setShowCreateNewTask_Modal(true);
     setTheTaskBeingEdited(taskToEdit);
-  }
+  };
 
   // Delete a Task
   const handleDeleteTask = (taskToDelete) => {
     if (taskToDelete.listId > mock_lists.length) {
-        const storedTasks = getTasksFromLocalStorage();
-        if (storedTasks) {
-            const updatedTasks = storedTasks.filter((task) => task.id !== taskToDelete.id);
-            localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-        }
+      const storedTasks = getTasksFromLocalStorage();
+      if (storedTasks) {
+        const updatedTasks = storedTasks.filter(
+          (task) => task.id !== taskToDelete.id
+        );
+        localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+      }
     }
 
     const tasksToKeep = tasks.filter((task) => task.id !== taskToDelete.id);
@@ -159,7 +168,7 @@ function App() {
   const handleEditList = (listToEdit) => {
     setShowCreateNewList_Modal(true);
     setTheListBeingEdited(listToEdit);
-  }
+  };
 
   // Delete a Task
   const handleDeleteList = (listToDelete) => {
@@ -167,12 +176,15 @@ function App() {
       const storedTasks = getTasksFromLocalStorage();
       const storedLists = getListsFromStorage();
       if (storedTasks) {
-          const updatedTasks = storedTasks.filter((task) => task.listId !== listToDelete.id);
-          localStorage.setItem('todos-tasks', JSON.stringify(updatedTasks));
+        const updatedTasks = storedTasks.filter(
+          (task) => task.listId !== listToDelete.id
+        );
+        localStorage.setItem("todos-tasks", JSON.stringify(updatedTasks));
 
-          const updatedLists = storedLists.filter((list) => list.id !== listToDelete.id);
-          localStorage.setItem('todos-lists', JSON.stringify(updatedLists));
-
+        const updatedLists = storedLists.filter(
+          (list) => list.id !== listToDelete.id
+        );
+        localStorage.setItem("todos-lists", JSON.stringify(updatedLists));
       }
     }
 
@@ -188,32 +200,29 @@ function App() {
     const updatedTask = { ...task, completed: !task.completed };
 
     if (task.listId > mock_lists.length) {
-        const storedTasks = getTasksFromLocalStorage();
-        if (storedTasks) {
-            const updatedTasks = storedTasks.map((t) =>
-                t.id === task.id ? updatedTask : t
-            );
-            localStorage.setItem("todos-tasks", JSON.stringify(updatedTasks));
-        }
+      const storedTasks = getTasksFromLocalStorage();
+      if (storedTasks) {
+        const updatedTasks = storedTasks.map((t) =>
+          t.id === task.id ? updatedTask : t
+        );
+        localStorage.setItem("todos-tasks", JSON.stringify(updatedTasks));
+      }
     }
 
     // Update in the current tasks state
-    const updatedTasks = tasks.map((t) =>
-        t.id === task.id ? updatedTask : t
-    );
+    const updatedTasks = tasks.map((t) => (t.id === task.id ? updatedTask : t));
     setTasks(updatedTasks);
   };
-
-
 
   // For Lists
   useEffect(() => {
     const storedLists = getListsFromStorage();
     setLists((prevLists) => {
-        const uniqueStoredLists = storedLists.filter(
-            (newList) => !prevLists.some((existingList) => existingList.id === newList.id)
-        );
-        return [...prevLists, ...uniqueStoredLists];
+      const uniqueStoredLists = storedLists.filter(
+        (newList) =>
+          !prevLists.some((existingList) => existingList.id === newList.id)
+      );
+      return [...prevLists, ...uniqueStoredLists];
     });
   }, []);
 
@@ -221,57 +230,62 @@ function App() {
   useEffect(() => {
     const storedTasks = getTasksFromLocalStorage();
     setTasks((prevTasks) => {
-        const uniqueStoredTasks = storedTasks.filter(
-            (newTask) => !prevTasks.some((existingTask) => existingTask.id === newTask.id)
-        );
-        return [...prevTasks, ...uniqueStoredTasks];
+      const uniqueStoredTasks = storedTasks.filter(
+        (newTask) =>
+          !prevTasks.some((existingTask) => existingTask.id === newTask.id)
+      );
+      return [...prevTasks, ...uniqueStoredTasks];
     });
   }, []);
 
   return (
-    <div className='w-screen h-screen overflow-x-hidden flex flex-col justify-between'>
+    <div className="w-screen h-screen overflow-x-hidden flex flex-col justify-between">
       <Navbar />
 
-      <div className='flex h-full'>
-        <SidePanel lists = { lists } scrollToCard = { scrollToCard } showNewListModal = { showNewListModal } />
-        <ListsContainer 
-          lists = { lists } 
-          tasks = { tasks } 
-          cardRefs = { cardRefs } 
-          containerRef={ containerRef } 
-          showNewTaskModal={ showNewTaskModal }
-          onEdit = { handleEditTask } 
-          onDelete = { handleDeleteTask }
-          onEditList={ handleEditList }
-          onDeleteList={ handleDeleteList }
-          onCompleted={ handleCompleted }
+      <div className="flex h-full">
+        <SidePanel
+          lists={lists}
+          scrollToCard={scrollToCard}
+          showNewListModal={showNewListModal}
+        />
+        <ListsContainer
+          lists={lists}
+          tasks={tasks}
+          cardRefs={cardRefs}
+          containerRef={containerRef}
+          showNewTaskModal={showNewTaskModal}
+          onEdit={handleEditTask}
+          onDelete={handleDeleteTask}
+          onEditList={handleEditList}
+          onDeleteList={handleDeleteList}
+          onCompleted={handleCompleted}
         />
       </div>
 
       <Footer />
 
       {/* Create New List Modal */}
-      <CreateNewList 
-        isModalVisible={showCreateNewList_Modal} 
-        onSubmit={handleNewList} 
+      <CreateNewList
+        isModalVisible={showCreateNewList_Modal}
+        onSubmit={handleNewList}
         onClose={() => {
           setShowCreateNewList_Modal(false);
           setTheListBeingEdited(null);
-        }} 
+        }}
         listToEdit={theListBeingEdited}
       />
 
-      <CreateNewTask 
-        isModalVisible={showCreateNewTask_Modal} 
-        onSubmit={handleNewTask} 
+      <CreateNewTask
+        isModalVisible={showCreateNewTask_Modal}
+        onSubmit={handleNewTask}
         onClose={() => {
-          setShowCreateNewTask_Modal(false); 
+          setShowCreateNewTask_Modal(false);
           setTheTaskBeingEdited(null);
-        }} 
+        }}
         taskToEdit={theTaskBeingEdited}
       />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
